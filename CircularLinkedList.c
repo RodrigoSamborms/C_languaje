@@ -43,7 +43,7 @@ void menu()
 int main()
 {
 	int option;
-	clrscr();
+	//clrscr();
 	do
 	{
 
@@ -69,7 +69,7 @@ int main()
 				break;
 			case 8: start = delete_list(start);
 				break;		
-			default: printf("\n No existe esa opción intente nuevamente");
+			default: printf("\n ");
 		}
 
 	}while (option !=9);
@@ -149,14 +149,56 @@ struct node *insert_end(struct node *start)
 	new_node -> next = start;
 	return start;
 }
-struct node *delete(strcut node *start)
+struct node *delete_beg(struct node *start)
 {
 	struct node *ptr;
 	ptr = start;
 	while(ptr -> next != start)
 		ptr = ptr -> next;
 	ptr -> next = start -> next;
-	free(start);
+	free(start);			//IMPORTANT we have to free the memory to avoid memory leaks problems
 	start = ptr -> next;
 	return start;
 }
+struct node *delete_end(struct node *start)
+{
+	struct node *ptr, *preptr;
+	ptr = start;
+	while(ptr -> next != start)
+	{
+		preptr = ptr;
+		ptr = ptr -> next;
+	}
+	preptr -> next = ptr -> next;
+	free (ptr);		//IMPORTANT we have free the memory of ptr this erase the pointer
+	return start;
+}
+struct node *delete_after(struct node *start)
+{
+	struct node *ptr, *preptr;
+	int val;
+	printf("\n Enter the value after wich the node has to deleted : ");
+	scanf("%d", &val);
+	ptr = start;
+	preptr = ptr;
+	while(preptr -> data != val) //NOTE: the loop don´t take the case if there is not find the node
+	{
+		preptr = ptr;
+		ptr = ptr -> next;
+	}
+	preptr -> next = ptr -> next;
+	if (ptr == start)
+		start = preptr -> next;
+	free(ptr);
+	return start;
+}
+struct node *delete_list(struct node *start)
+{
+	struct node *ptr;
+	ptr = start;
+	while(ptr -> next != start)
+		start = delete_end(start);
+	free(start);
+	return start;
+}
+

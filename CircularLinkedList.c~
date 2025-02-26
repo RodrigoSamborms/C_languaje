@@ -43,7 +43,7 @@ void menu()
 int main()
 {
 	int option;
-	clrscr();
+	//clrscr();
 	do
 	{
 
@@ -116,6 +116,89 @@ struct node *display(struct node *start)
 		ptr = ptr -> next;
 	}
 	printf("\t %d", ptr -> data);
+	return start;
+}
+struct node *insert_beg(struct node *start)
+{
+	struct node *new_node, *ptr;
+	int num;
+	printf("\n Enter the data : ");
+	scanf("%d", &num);
+	new_node = (struct node *)malloc(sizeof(struct node));
+	new_node -> data = num;
+	ptr = start;
+	while(ptr -> next != start)
+		ptr = ptr -> next;
+	ptr -> next = new_node;
+	new_node -> next = start;
+	start = new_node;
+	return start;
+}
+struct node *insert_end(struct node *start)
+{
+	struct node *ptr, *new_node;
+	int num;
+	printf("\n Enter the data : ");
+	scanf("%d", &num);
+	new_node = (struct node *)malloc(sizeof(struct node));
+	new_node -> data = num;
+	ptr = start;
+	while(ptr -> next != start)
+		ptr = ptr -> next;
+	ptr -> next = new_node;
+	new_node -> next = start;
+	return start;
+}
+struct node *delete_beg(struct node *start)
+{
+	struct node *ptr;
+	ptr = start;
+	while(ptr -> next != start)
+		ptr = ptr -> next;
+	ptr -> next = start -> next;
+	free(start);			//IMPORTANT we have to free the memory to avoid memory leaks problems
+	start = ptr -> next;
+	return start;
+}
+struct node *delete_end(struct node *start)
+{
+	struct node *ptr, *preptr;
+	ptr = start;
+	while(ptr -> next != start)
+	{
+		preptr = ptr;
+		ptr = ptr -> next;
+	}
+	preptr -> next = ptr -> next;
+	free (ptr);		//IMPORTANT we have free the memory of ptr this erase the pointer
+	return start;
+}
+struct node *delete_after(struct node *start)
+{
+	struct node *ptr, *preptr;
+	int val;
+	printf("\n Enter the value after wich the node has to deleted : ");
+	scanf("%d", &val);
+	ptr = start;
+	preptr = ptr;
+	while(preptr -> data != val) //NOTE: the loop don´t take the case if there is not find the node
+	{
+		preptr = ptr;
+		ptr = ptr -> next;
+	}
+	preptr -> next = ptr -> next;
+	if (ptr == start)
+		start = preptr -> next;
+	free(ptr);
+	return start;
+}
+struct node *delete_list(struct node *start)
+{
+	struct node *ptr;
+	ptr = start;
+	while(ptr -> next != start)
+		start = delete_end(start);
+	free(start);
 	return start;
 }
 
